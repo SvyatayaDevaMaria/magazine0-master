@@ -1,20 +1,20 @@
 package org.maya.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "items")
+public class Item extends PanacheEntityBase {
 
-@SequenceGenerator(
-        name = "items_seq_gen",
-        sequenceName = "items_SEQ",
-        allocationSize = 1
-)
-public class Item extends PanacheEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
+
     @Column(nullable = false, unique = true)
     public String name;
 
@@ -23,4 +23,8 @@ public class Item extends PanacheEntity {
 
     @Column(nullable = false)
     public double price;
+
+    @OneToMany(mappedBy = "item")
+    @JsonManagedReference("item-orderItems")
+    public List<OrderItem> orderItems = new ArrayList<>();
 }

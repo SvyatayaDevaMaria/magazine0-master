@@ -1,5 +1,6 @@
 package org.maya.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -16,7 +17,8 @@ public class Order extends PanacheEntity {
     @Column(length = 500)
     public String address;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("order-orderItems")
     public List<OrderItem> items = new ArrayList<>();
 
     public void addOrderItem(OrderItem item) {
